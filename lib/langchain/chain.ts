@@ -1,136 +1,95 @@
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
-import { PromptTemplate } from '@langchain/core/prompts'
-import { RunnableSequence } from '@langchain/core/runnables'
-import { StringOutputParser } from '@langchain/core/output_parsers'
 import { Document } from '@langchain/core/documents'
 import { formatDocumentsForContext } from './retriever'
-
-const apiKey = process.env.GOOGLE_API_KEY!
-
-if (!apiKey) {
-  throw new Error('GOOGLE_API_KEY environment variable is not set')
-}
+import { generateText, streamText, formatRAGPrompt, formatConversationalPrompt } from './ollama'
 
 /**
- * RAG prompt template with strict source attribution requirements
+ * UPDATED: Now using Ollama for local LLM inference
+ * 
+ * Benefits:
+ * - No API quota limits
+ * - Fast inference on Mac M4
+ * - Free unlimited usage
+ * - Privacy - all data stays local
+ * 
+ * Previous: ChatGoogleGenerativeAI (gemini-2.0-flash-exp)
+ * Current: Ollama (gemma3:4b)
  */
-const RAG_TEMPLATE = `You are a knowledgeable AI assistant with access to a document knowledge base. Your task is to answer questions based ONLY on the provided context documents.
-
-IMPORTANT INSTRUCTIONS:
-1. Answer based ONLY on the information in the provided context
-2. Cite which document(s) you're referencing in your answer
-3. If the context doesn't contain enough information, acknowledge this clearly
-4. Be concise but complete in your responses
-5. Maintain a professional and helpful tone
-
-Context Documents:
-{context}
-
-Question: {question}
-
-Answer (with source citations):`.trim()
 
 /**
- * Chat prompt for conversational context (with history)
- */
-const CHAT_TEMPLATE = `You are a knowledgeable AI assistant with access to a document knowledge base. Use the conversation history and context to provide helpful, accurate answers.
-
-Conversation History:
-{history}
-
-Context Documents:
-{context}
-
-Current Question: {question}
-
-Answer (with source citations):`.trim()
-
-/**
- * Initialize the Gemini 2.0 Flash model
- */
-export function createLLM(streaming: boolean = false) {
-  return new ChatGoogleGenerativeAI({
-    apiKey,
-    modelName: 'gemini-2.0-flash-exp',
-    temperature: 0.3,
-    maxOutputTokens: 2048,
-    streaming,
-  })
-}
-
-/**
- * Create the RAG chain for question answering
- */
-export function createRAGChain(streaming: boolean = false) {
-  const llm = createLLM(streaming)
-  const prompt = PromptTemplate.fromTemplate(RAG_TEMPLATE)
-
-  const chain = RunnableSequence.from([
-    {
-      context: (input: { context: string; question: string }) => input.context,
-      question: (input: { context: string; question: string }) => input.question,
-    },
-    prompt,
-    llm,
-    new StringOutputParser(),
-  ])
-
-  return chain
-}
-
-/**
- * Create conversational RAG chain with history
- */
-export function createConversationalRAGChain(streaming: boolean = false) {
-  const llm = createLLM(streaming)
-  const prompt = PromptTemplate.fromTemplate(CHAT_TEMPLATE)
-
-  const chain = RunnableSequence.from([
-    {
-      context: (input: { context: string; question: string; history: string }) => input.context,
-      question: (input: { context: string; question: string; history: string }) => input.question,
-      history: (input: { context: string; question: string; history: string }) => input.history,
-    },
-    prompt,
-    llm,
-    new StringOutputParser(),
-  ])
-
-  return chain
-}
-
-/**
- * Simple wrapper to invoke RAG chain
+ * Invoke RAG chain with Ollama
+ * Non-streaming version for simple Q&A
  */
 export async function invokeRAGChain(
   question: string,
   documents: Document[]
 ): Promise<string> {
-  const chain = createRAGChain(false)
   const context = formatDocumentsForContext(documents)
+  const prompt = formatRAGPrompt(context, question)
 
-  const response = await chain.invoke({
-    context,
-    question,
+  const response = await generateText(prompt, {
+    temperature: 0.3,
+    maxTokens: 2048,
   })
 
   return response
 }
 
 /**
- * Stream RAG chain response
- * Returns async iterable for streaming
+ * Stream RAG chain response using Ollama
+ * Returns async iterable for streaming responses
  */
 export async function* streamRAGChain(
   question: string,
   documents: Document[]
 ): AsyncIterable<string> {
-  const chain = createRAGChain(true)
   const context = formatDocumentsForContext(documents)
+  const prompt = formatRAGPrompt(context, question)
 
-  const stream = await chain.stream({
-    context,
-    question,
+  const stream = streamText(prompt, {
+    temperature: 0.3,
+    maxTokens: 2048,
+  })
+
+  for await (const chunk of stream) {
+    yield chunk
+  }
+}
+
+/**
+ * Invoke conversational RAG with history
+ */
+export async function invokeConversationalRAG(
+  question: string,
+  documents: Document[],
+  history: Array<{ role: 'user' | 'assistant'; content: string }>
+): Promise<string> {
+  const context = formatDocumentsForContext(documents)
+  const historyText = formatConversationHistory(history)
+  const prompt = formatConversationalPrompt(context, question, historyText)
+
+  const response = await generateText(prompt, {
+    temperature: 0.3,
+    maxTokens: 2048,
+  })
+
+  return response
+}
+
+/**
+ * Stream conversational RAG with history
+ */
+export async function* streamConversationalRAG(
+  question: string,
+  documents: Document[],
+  history: Array<{ role: 'user' | 'assistant'; content: string }>
+): AsyncIterable<string> {
+  const context = formatDocumentsForContext(documents)
+  const historyText = formatConversationHistory(history)
+  const prompt = formatConversationalPrompt(context, question, historyText)
+
+  const stream = streamText(prompt, {
+    temperature: 0.3,
+    maxTokens: 2048,
   })
 
   for await (const chunk of stream) {
@@ -152,3 +111,31 @@ export function formatConversationHistory(
     .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
     .join('\n\n')
 }
+
+/**
+ * LEGACY: Old Gemini-based functions kept for reference
+ * These are no longer used but preserved for rollback if needed
+ */
+
+// import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
+// import { PromptTemplate } from '@langchain/core/prompts'
+// import { RunnableSequence } from '@langchain/core/runnables'
+// import { StringOutputParser } from '@langchain/core/output_parsers'
+
+// const apiKey = process.env.GOOGLE_API_KEY!
+
+// export function createLLM(streaming: boolean = false) {
+//   return new ChatGoogleGenerativeAI({
+//     apiKey,
+//     modelName: 'gemini-2.0-flash-exp',
+//     temperature: 0.3,
+//     maxOutputTokens: 2048,
+//     streaming,
+//   })
+// }
+
+// export function createRAGChain(streaming: boolean = false) {
+//   const llm = createLLM(streaming)
+//   const prompt = PromptTemplate.fromTemplate(RAG_TEMPLATE)
+//   // ... rest of chain setup
+// }

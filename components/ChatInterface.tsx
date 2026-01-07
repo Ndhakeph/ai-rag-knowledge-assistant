@@ -121,10 +121,6 @@ export function ChatInterface() {
             )}
           </button>
         </form>
-
-        <p className="mt-2 text-xs text-gray-500 text-center">
-          Powered by Google Gemini 2.0 Flash with LangChain.js
-        </p>
       </div>
     </div>
   )

@@ -14,7 +14,7 @@ export default function HomePage() {
             </div>
             <div>
               <h1 className="text-xl font-bold gradient-text">RAG Knowledge Assistant</h1>
-              <p className="text-xs text-gray-500">Powered by LangChain.js & Gemini</p>
+              <p className="text-xs text-gray-500">Powered by Ollama (Local AI)</p>
             </div>
           </div>
 
@@ -49,7 +49,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-gray-800 bg-gray-900/50 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-6 py-3 text-center text-xs text-gray-500">
-          Built with Next.js 14, LangChain.js, Supabase pgvector, and Google Gemini
+          Built with Next.js 14, LangChain.js, Supabase pgvector, and Ollama
         </div>
       </footer>
     </div>
