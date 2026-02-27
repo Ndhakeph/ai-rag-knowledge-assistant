@@ -7,7 +7,6 @@
 
 import { getRelevantDocuments } from '@/lib/langchain/retriever'
 import { invokeRAGChain } from '@/lib/langchain/chain'
-import type { Document } from '@langchain/core/documents'
 
 export interface QueryResult {
   success: boolean

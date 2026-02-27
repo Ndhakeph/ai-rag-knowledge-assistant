@@ -112,30 +112,3 @@ export function formatConversationHistory(
     .join('\n\n')
 }
 
-/**
- * LEGACY: Old Gemini-based functions kept for reference
- * These are no longer used but preserved for rollback if needed
- */
-
-// import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
-// import { PromptTemplate } from '@langchain/core/prompts'
-// import { RunnableSequence } from '@langchain/core/runnables'
-// import { StringOutputParser } from '@langchain/core/output_parsers'
-
-// const apiKey = process.env.GOOGLE_API_KEY!
-
-// export function createLLM(streaming: boolean = false) {
-//   return new ChatGoogleGenerativeAI({
-//     apiKey,
-//     modelName: 'gemini-2.0-flash-exp',
-//     temperature: 0.3,
-//     maxOutputTokens: 2048,
-//     streaming,
-//   })
-// }
-
-// export function createRAGChain(streaming: boolean = false) {
-//   const llm = createLLM(streaming)
-//   const prompt = PromptTemplate.fromTemplate(RAG_TEMPLATE)
-//   // ... rest of chain setup
-// }

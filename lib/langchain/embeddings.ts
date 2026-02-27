@@ -106,16 +106,3 @@ export async function checkEmbeddingModelHealth(): Promise<{
   }
 }
 
-/**
- * LEGACY: Old Gemini-based embedding code (no longer used)
- * Kept for reference and potential rollback
- */
-
-// import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai'
-// 
-// const apiKey = process.env.GOOGLE_API_KEY!
-// 
-// export const embeddings = new GoogleGenerativeAIEmbeddings({
-//   apiKey,
-//   modelName: 'text-embedding-004',
-// })

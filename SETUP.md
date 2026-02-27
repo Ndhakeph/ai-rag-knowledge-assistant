@@ -27,11 +27,16 @@
 
 ### Step 3: Configure Environment
 
-The `.env.local` file already exists with your credentials:
+Copy the example env file and add your credentials:
+```bash
+cp .env.example .env.local
+```
+
+Then edit `.env.local` with your actual values:
 ```env
-GOOGLE_API_KEY=AIzaSyB7XfeO1WH6kr0q_y-atIuN38krFmXAbQM
-NEXT_PUBLIC_SUPABASE_URL=https://gizrzflbrkkihvebzbcp.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+GOOGLE_API_KEY=your_google_api_key_here
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
 ### Step 4: Run the Application
