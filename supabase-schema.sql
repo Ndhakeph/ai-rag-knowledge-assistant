@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS document_chunks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
-  embedding vector(768), -- Gemini text-embedding-004 dimension
+  embedding vector(768), -- nomic-embed-text dimension (Ollama)
   chunk_index INTEGER NOT NULL,
   metadata JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),

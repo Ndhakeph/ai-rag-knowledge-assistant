@@ -11,8 +11,8 @@ The RAG Knowledge Assistant now uses **Ollama** for local LLM inference instead 
 - ✅ Privacy - all data stays local
 - ✅ Works offline
 
-**What Still Uses Gemini:**
-- Embeddings (only during document upload, infrequent)
+**Fully Local Stack:**
+- Both generation (gemma3:4b) and embeddings (nomic-embed-text) run via Ollama
 
 ## 🚀 Quick Start
 
