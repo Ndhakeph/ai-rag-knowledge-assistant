@@ -89,7 +89,7 @@ function rerankDocuments(documents: Document[], query: string): Document[] {
  */
 async function enrichDocumentsWithMetadata(documents: Document[]): Promise<Document[]> {
   // Get unique document IDs
-  const documentIds = [...new Set(documents.map(doc => doc.metadata.documentId))]
+  const documentIds = Array.from(new Set(documents.map(doc => doc.metadata.documentId)))
 
   // Fetch document metadata from database
   const { data: docMetadata, error } = await supabase

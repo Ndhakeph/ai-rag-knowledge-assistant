@@ -1,19 +1,12 @@
 import { Ollama } from 'ollama'
 
 /**
- * UPDATED: Now using Ollama for embeddings instead of Gemini
- * 
- * Model: nomic-embed-text
- * Dimensions: 768 (matches Gemini text-embedding-004)
- * 
- * Benefits:
- * - No API keys needed (can't be leaked)
- * - Free unlimited usage
- * - Works offline
- * - Fast on Mac M4
- * 
- * Previous: GoogleGenerativeAIEmbeddings (text-embedding-004)
- * Current: Ollama (nomic-embed-text)
+ * Local embedding generation using Ollama
+ *
+ * Model: nomic-embed-text (768 dimensions)
+ * - Runs entirely on-device via Ollama
+ * - No API keys or external dependencies
+ * - Fast inference on Apple Silicon
  */
 
 const ollama = new Ollama({
@@ -24,7 +17,7 @@ const ollama = new Ollama({
  * Embedding model configuration
  */
 export const EMBEDDING_MODEL = 'nomic-embed-text'
-export const EMBEDDING_DIMENSION = 768
+export const EMBEDDING_DIMENSION = 768 // Must match pgvector column dimension
 
 /**
  * Generate embedding for a single text using Ollama
@@ -85,7 +78,8 @@ export async function checkEmbeddingModelHealth(): Promise<{
 }> {
   try {
     const models = await ollama.list()
-    const modelAvailable = models.models.some(m => m.name === EMBEDDING_MODEL)
+    // Check if model is available (Ollama model names may include version tags)
+    const modelAvailable = models.models.some(m => m.name.startsWith(EMBEDDING_MODEL))
 
     if (!modelAvailable) {
       return {

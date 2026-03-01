@@ -1,7 +1,7 @@
 {
   "name": "ai-rag-knowledge-assistant",
   "version": "1.0.0",
-  "description": "Production-grade RAG Knowledge Assistant with LangChain.js and Supabase pgvector",
+  "description": "Local document Q&A with multi-stage retrieval and hybrid reranking",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -32,7 +32,7 @@ export function ChatInterface() {
                 Ask me anything about your documents
               </h3>
               <p className="text-sm text-gray-500">
-                I'll search through your knowledge base and provide answers with sources
+                Search your knowledge base and get answers with sources
               </p>
             </div>
           </div>

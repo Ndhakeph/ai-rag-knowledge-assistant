@@ -7,10 +7,9 @@ import type { SourceInfo } from '@/app/actions/query'
 
 interface SourceCardProps {
   source: SourceInfo
-  index: number
 }
 
-export function SourceCard({ source, index }: SourceCardProps) {
+export function SourceCard({ source }: SourceCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const similarityPercentage = Math.round(source.similarity * 100)
@@ -93,7 +92,7 @@ export function SourceList({ sources }: SourceListProps) {
       </h3>
       <div className="space-y-3">
         {sources.map((source, index) => (
-          <SourceCard key={index} source={source} index={index} />
+          <SourceCard key={`${source.documentId}-${source.chunkIndex}`} source={source} />
         ))}
       </div>
     </div>

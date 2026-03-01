@@ -3,16 +3,11 @@ import { formatDocumentsForContext } from './retriever'
 import { generateText, streamText, formatRAGPrompt, formatConversationalPrompt } from './ollama'
 
 /**
- * UPDATED: Now using Ollama for local LLM inference
- * 
- * Benefits:
- * - No API quota limits
- * - Fast inference on Mac M4
- * - Free unlimited usage
- * - Privacy - all data stays local
- * 
- * Previous: ChatGoogleGenerativeAI (gemini-2.0-flash-exp)
- * Current: Ollama (gemma3:4b)
+ * RAG chain implementation using Ollama for local inference
+ *
+ * - Formats retrieved documents as context for the LLM
+ * - Supports both streaming and non-streaming responses
+ * - Maintains conversation history for follow-up questions
  */
 
 /**

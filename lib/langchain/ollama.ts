@@ -2,13 +2,9 @@ import { Ollama } from 'ollama'
 
 /**
  * Ollama client for local LLM inference
- * Using gemma3:4b model running on Mac M4
- * 
- * Benefits:
- * - No API quotas or rate limits
- * - Fast inference on Apple Silicon
- * - Privacy - all data stays local
- * - Free unlimited usage
+ *
+ * Using gemma3:4b - a lightweight model optimized for Apple Silicon.
+ * All inference runs on-device with no external API calls.
  */
 
 const ollama = new Ollama({
@@ -116,9 +112,9 @@ export async function checkOllamaHealth(): Promise<{
     // Check if Ollama is running
     const models = await ollama.list()
     
-    // Check if our model is available
+    // Check if our model is available (model names may include version tags)
     const modelAvailable = models.models.some(
-      m => m.name === DEFAULT_MODEL
+      m => m.name.startsWith(DEFAULT_MODEL.split(':')[0])
     )
 
     return {

@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'RAG Knowledge Assistant',
-  description: 'Production-grade RAG system with LangChain.js and Supabase pgvector',
+  description: 'Local document Q&A with multi-stage retrieval and hybrid reranking',
 }
 
 export default function RootLayout({
