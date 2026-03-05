@@ -1,0 +1,14 @@
+node_modules
+.next
+.env
+.env.local
+.env*.local
+.git
+.gitignore
+.DS_Store
+*.md
+LICENSE
+.eslintrc.json
+.claude
+tsconfig.tsbuildinfo
+next-env.d.ts
