@@ -1,5 +1,9 @@
 # RAG Knowledge Assistant
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+![Demo](docs/demo.png)
+
 A local document Q&A system with multi-stage retrieval and hybrid reranking.
 
 ## Why I Built This
@@ -67,7 +71,7 @@ The retrieval pipeline runs in three stages:
 2. **Hybrid reranking**: Score each chunk with weighted combination of four signals
 3. **Generation**: Pass top 5 reranked chunks as context, stream the response
 
-## Key Technical Decisions
+## 🔧 Key Technical Decisions
 
 - **Hybrid reranking weights (50/25/15/10)**: Vector similarity alone misses keyword matches that humans expect. If a user asks about "authentication," chunks containing that exact word should rank higher even if the embedding thinks "security" is equally relevant. Position weighting gives a small boost to introductions where terms get defined. Recency helps when documents are updated over time.
 
@@ -75,7 +79,7 @@ The retrieval pipeline runs in three stages:
 
 - **HNSW over IVFFlat**: HNSW has better recall at the same latency. With `m=16` and `ef_construction=64`, I get sub-10ms search times on thousands of chunks while maintaining >95% recall compared to exact search.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Next.js 14** — App Router, Server Actions, streaming responses
 - **TypeScript** — End-to-end type safety
@@ -84,7 +88,7 @@ The retrieval pipeline runs in three stages:
 - **Supabase** — Postgres with pgvector extension, HNSW indexing
 - **Tailwind CSS** — Utility-first styling with custom glass morphism effects
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
