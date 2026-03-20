@@ -107,7 +107,7 @@ ollama serve
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/ai-rag-knowledge-assistant
+git clone https://github.com/Ndhakeph/ai-rag-knowledge-assistant
 cd ai-rag-knowledge-assistant
 npm install
 
