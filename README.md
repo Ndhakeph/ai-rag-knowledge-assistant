@@ -77,7 +77,7 @@ The retrieval pipeline runs in three stages:
 
 - **Chunking at 1000 chars with 200-char overlap**: Smaller chunks (500) gave better precision but lost context for multi-sentence answers. Larger chunks (2000) diluted relevance scores. The overlap ensures we don't split mid-paragraph and lose semantic continuity at boundaries.
 
-- **HNSW over IVFFlat**: HNSW has better recall at the same latency. With `m=16` and `ef_construction=64`, I get sub-10ms search times on thousands of chunks while maintaining >95% recall compared to exact search.
+- **HNSW over IVFFlat**: HNSW gives better recall at the same latency. I tuned the index with `m=16` and `ef_construction=64` to keep search fast on the current corpus (a few thousand chunks) while staying close to exact-search recall. I haven't yet run a formal recall/latency benchmark, so I'm describing the tradeoff rather than quoting numbers I can't reproduce on demand.
 
 ## 🛠️ Tech Stack
 
